@@ -10,7 +10,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import java.nio.file.Paths;
 
-
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +20,7 @@ public class BossEnemy extends Enemy {
   private int health = 5;
 
   /** Width of the boss enemy hitbox. */
-  private static final int WIDTH = 50;
+  private static final int WIDTH = 90;
 
   /** Height of the boss enemy hitbox. */
   private static final int HEIGHT = 50; // Hitbox height

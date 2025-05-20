@@ -14,16 +14,19 @@ public class ImageProcessor {
             BufferedImage enemyimage = ImageIO.read(new File("src/main/resources/enemy.png"));
             BufferedImage bossimage = ImageIO.read(new File("src/main/resources/boss.png"));
             BufferedImage powerupimage = ImageIO.read(new File("src/main/resources/powerup.png"));
+            BufferedImage playerimage = ImageIO.read(new File("src/main/resources/player.png"));
 
             // Cắt nền trắng
             BufferedImage resultImage = removeWhiteBackground(enemyimage);
             BufferedImage bossresultImage = removeWhiteBackground(bossimage);
             BufferedImage powerupresultImage = removeWhiteBackground(powerupimage);
+            BufferedImage playerresultImage = removeWhiteBackground(playerimage);
 
             // Lưu ảnh đã xử lý
             ImageIO.write(resultImage, "png", new File("src/main/resources/enemy.png"));
             ImageIO.write(bossresultImage, "png", new File("src/main/resources/boss.png"));
             ImageIO.write(powerupresultImage, "png", new File("src/main/resources/powerup.png"));
+            ImageIO.write(playerresultImage, "png", new File("src/main/resources/player.png"));
 
         } catch (IOException e) {
             e.printStackTrace();

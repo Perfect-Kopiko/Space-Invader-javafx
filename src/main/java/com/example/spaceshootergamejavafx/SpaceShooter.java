@@ -36,10 +36,10 @@ import javafx.util.Duration;
 public class SpaceShooter extends Application {
 
   /** Width of the game window. */
-  public static final int WIDTH = 350;
+  public static final int WIDTH = 500;
 
   /** Height of the game window. */
-  public static final int HEIGHT = 600;
+  public static final int HEIGHT = 900;
 
   /** Number of lives the player starts with. */
   public static int numLives = 3;
@@ -409,63 +409,114 @@ public class SpaceShooter extends Application {
     }
   }
 
-  /** Create button exit and button try again. */
+  /** Create button exit and button try again, button menu. */
   private Button exitButton = new Button("Exit Game");
   private Button tryAgainButton = new Button("Try Again");
+  private Button menuButton = new Button("Menu");
 
-  private Button TryButton() {
-    // Try Again Button
+
+  /** Method to create the try again button. */
+  private Button  TryButton() {
     tryAgainButton.setStyle(
-        "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
-        + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: "
-        + "'Verdana';");
-    tryAgainButton.setOnMouseEntered(event -> {
-      tryAgainButton.setStyle("-fx-background-color: white; -fx-text-fill: "
-                              + "black; -fx-font-size: 18; "
-                              + "-fx-font-weight: bold; -fx-padding: 10 20; "
-                              + "-fx-font-family: 'Verdana';");
-      tryAgainButton.setEffect(new Glow(0.5));
-    });
-    tryAgainButton.setOnMouseExited(event -> {
-      tryAgainButton.setStyle("-fx-background-color: #444; -fx-text-fill: "
-                              + "white; -fx-font-size: 18; "
-                              + "-fx-font-weight: bold; -fx-padding: 10 20; "
-                              + "-fx-font-family: 'Verdana';");
-      tryAgainButton.setEffect(null);
-    });
+            "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
+                    + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
+                    + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+    tryAgainButton.setOnMouseEntered(
+            event -> {
+              tryAgainButton.setStyle(
+                      "-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 18; "
+                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
+                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+              tryAgainButton.setEffect(new Glow(0.5));
+            });
+    tryAgainButton.setOnMouseExited(
+            event -> {
+              tryAgainButton.setStyle(
+                      "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
+                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
+                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+              tryAgainButton.setEffect(null);
+            });
     tryAgainButton.setLayoutX(180);
     tryAgainButton.setLayoutY(350);
+    tryAgainButton.setPrefWidth(150);
+    tryAgainButton.setPrefHeight(50);
     tryAgainButton.setOnAction(event -> restartGame());
 
     return tryAgainButton;
   }
 
-  private Button ExitButton() {
-    // Exit Button
-    exitButton.setStyle("-fx-background-color: #d9534f; -fx-text-fill: "
-                        + "white; -fx-font-size: 18; "
-                        + "-fx-font-weight: bold; -fx-padding: 10 20; "
-                        + "-fx-font-family: 'Verdana';");
-    exitButton.setOnMouseEntered(event -> {
-      exitButton.setStyle(
-          "-fx-background-color: white; -fx-text-fill: red; -fx-font-size: 18; "
-          + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: "
-          + "'Verdana';");
-      exitButton.setEffect(new Glow(0.5));
-    });
-    exitButton.setOnMouseExited(event -> {
-      exitButton.setStyle("-fx-background-color: #d9534f; -fx-text-fill: "
-                          + "white; -fx-font-size: 18; "
-                          + "-fx-font-weight: bold; -fx-padding: 10 20; "
-                          + "-fx-font-family: 'Verdana';");
-      exitButton.setEffect(null);
-    });
+  /** Method to create button exit*/
+  private Button  ExitButton() {
+    exitButton.setStyle(
+            "-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-size: 18; "
+                    + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
+                    + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+    exitButton.setOnMouseEntered(
+            event -> {
+              exitButton.setStyle(
+                      "-fx-background-color: white; -fx-text-fill: red; -fx-font-size: 18; "
+                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
+                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+              exitButton.setEffect(new Glow(0.5));
+            });
+    exitButton.setOnMouseExited(
+            event -> {
+              exitButton.setStyle(
+                      "-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-size: 18; "
+                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
+                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+              exitButton.setEffect(null);
+            });
     exitButton.setLayoutX(180);
     exitButton.setLayoutY(450);
+    exitButton.setPrefWidth(150);
+    exitButton.setPrefHeight(50);
     exitButton.setOnAction(event -> System.exit(0));
 
     return exitButton;
   }
+
+  /** Method to create menu button. */
+  private Button  MenuButton() {
+    menuButton.setStyle(
+            "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
+                    + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana'; "
+                    + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+    menuButton.setOnMouseEntered(
+            event -> {
+              menuButton.setStyle(
+                      "-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 18; "
+                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana'; "
+                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+              menuButton.setEffect(new Glow(0.5));
+            });
+    menuButton.setOnMouseExited(
+            event -> {
+              menuButton.setStyle(
+                      "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
+                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana'; "
+                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+              menuButton.setEffect(null);
+            });
+    menuButton.setLayoutX(180);
+    menuButton.setLayoutY(550);
+    menuButton.setPrefWidth(150);
+    menuButton.setPrefHeight(50);
+    menuButton.setOnAction(even -> {
+      gameObjects.clear();
+      numLives = 3;
+      score = 0;
+      BossesDefeated = 0;
+      bossExists = false;
+      gameObjects.add(player);
+      reset = true;
+      Scene menuScene = new Scene(createMenu(), WIDTH, HEIGHT);
+      primaryStage.setScene(menuScene);
+    });
+    return menuButton;
+  }
+
 
   /** Shows the losing screen when the player loses all lives. */
   private void showLosingScreen() {
@@ -497,8 +548,7 @@ public class SpaceShooter extends Application {
     // Create and set the losing screen scene
     Scene losingScene = new Scene(losingPane, WIDTH, HEIGHT);
     primaryStage.setScene(losingScene);
-    losingPane.getChildren().addAll(gameOverText, scoreText, ExitButton(),
-                                    TryButton());
+    losingPane.getChildren().addAll(gameOverText, scoreText, ExitButton(), TryButton(), MenuButton());
 
     // Play the losing sound
     playLosingSound();
@@ -555,8 +605,7 @@ public class SpaceShooter extends Application {
     // Create and set the losing screen scene
     Scene winningsence = new Scene(winningPane, WIDTH, HEIGHT);
     primaryStage.setScene(winningsence);
-    winningPane.getChildren().addAll(wingameText, scoreText, ExitButton(),
-                                     TryButton());
+    winningPane.getChildren().addAll(wingameText, scoreText, ExitButton(), TryButton(), MenuButton());
 
     playWinningSound();
   }

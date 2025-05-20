@@ -10,25 +10,25 @@ import java.util.Random;
 public class AIController {
     /** The player being controlled by the AI */
     private final Player player;
-    
+
     /** List of game objects to track enemies and bullets */
     private final List<GameObject> gameObjects;
-    
+
     /** List for adding new objects like bullets */
     private final List<GameObject> newObjects;
-    
+
     /** Random number generator for decision making */
     private final Random random = new Random();
-    
+
     /** Cooldown timer for shooting */
     private long lastShotTime = 0;
-    
+
     /** Minimum time between shots in milliseconds */
     private static final long SHOT_COOLDOWN = 500;
-    
+
     /** Chance of shooting when an enemy is detected (0-100) */
     private static final int SHOOT_CHANCE = 70;
-    
+
     /**
      * Creates a new AI controller for the player.
      *
@@ -41,7 +41,7 @@ public class AIController {
         this.gameObjects = gameObjects;
         this.newObjects = newObjects;
     }
-    
+
     /**
      * Updates the AI's decision making and controls the player.
      * This method should be called once per game loop.
@@ -52,10 +52,10 @@ public class AIController {
         player.setMoveRight(false);
         player.setMoveForward(false);
         player.setMoveBackward(false);
-        
+
         // Find closest enemy
         GameObject closestEnemy = findClosestEnemy();
-        
+
         // If there's an enemy, try to move toward it horizontally
         if (closestEnemy != null) {
             // Move horizontally to align with enemy
@@ -64,7 +64,7 @@ public class AIController {
             } else if (closestEnemy.getX() > player.getX() + 10) {
                 player.setMoveRight(true);
             }
-            
+
             // Occasionally move vertically to dodge
             if (random.nextInt(100) < 5) {
                 if (random.nextBoolean() && player.getY() > 100) {
@@ -73,7 +73,7 @@ public class AIController {
                     player.setMoveBackward(true);
                 }
             }
-            
+
             // Try to shoot if aligned with enemy
             if (Math.abs(closestEnemy.getX() - player.getX()) < 30) {
                 tryToShoot();
@@ -82,16 +82,16 @@ public class AIController {
             // If no enemies, patrol horizontally
             patrolMovement();
         }
-        
+
         // Avoid hitting the edges of the screen
         avoidEdges();
-        
+
         // Occasionally shoot even if not aligned
         if (random.nextInt(100) < 5) {
             tryToShoot();
         }
     }
-    
+
     /**
      * Tries to shoot if cooldown has elapsed.
      */
@@ -102,7 +102,7 @@ public class AIController {
             lastShotTime = currentTime;
         }
     }
-    
+
     /**
      * Finds the closest enemy to the player.
      *
@@ -111,7 +111,7 @@ public class AIController {
     private GameObject findClosestEnemy() {
         GameObject closest = null;
         double closestDistance = Double.MAX_VALUE;
-        
+
         for (GameObject obj : gameObjects) {
             if (obj instanceof Enemy) {
                 double distance = calculateDistance(player, obj);
@@ -121,10 +121,10 @@ public class AIController {
                 }
             }
         }
-        
+
         return closest;
     }
-    
+
     /**
      * Calculates the distance between two game objects.
      *
@@ -137,7 +137,7 @@ public class AIController {
         double dy = obj1.getY() - obj2.getY();
         return Math.sqrt(dx * dx + dy * dy);
     }
-    
+
     /**
      * Implements patrol movement when no enemies are detected.
      */
@@ -153,7 +153,7 @@ public class AIController {
             player.setMoveLeft(true);
         }
     }
-    
+
     /**
      * Prevents the player from hitting the edges of the screen.
      */
@@ -163,19 +163,19 @@ public class AIController {
             player.setMoveLeft(false);
             player.setMoveRight(true);
         }
-        
+
         // Avoid right edge
         if (player.getX() > SpaceShooter.WIDTH - 50) {
             player.setMoveRight(false);
             player.setMoveLeft(true);
         }
-        
+
         // Avoid top edge
         if (player.getY() < 50) {
             player.setMoveForward(false);
             player.setMoveBackward(true);
         }
-        
+
         // Avoid bottom edge
         if (player.getY() > SpaceShooter.HEIGHT - 50) {
             player.setMoveBackward(false);
