@@ -1,17 +1,12 @@
 package com.example.spaceshootergamejavafx;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javax.sound.sampled.*;
-import java.io.File;
-import java.io.IOException;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import java.nio.file.Paths;
-
 import java.util.List;
 import java.util.Objects;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 
 /** BossEnemy class represents a boss enemy in the game. */
 public class BossEnemy extends Enemy {
@@ -38,6 +33,9 @@ public class BossEnemy extends Enemy {
   /** Horizontal movement speed of the boss enemy. */
   private double horizontalSpeed = 1.5;
 
+  /** List of new game objects to be added by the boss enemy. */
+  private List<GameObject> newObjects;
+
   /**
    * Creates a new BossEnemy object at the specified position.
    *
@@ -50,7 +48,8 @@ public class BossEnemy extends Enemy {
     health = 5;
 
     // Load the boss image from resources
-    this.bossImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/boss.png")));
+    this.bossImage = new Image(
+        Objects.requireNonNull(getClass().getResourceAsStream("/boss.png")));
   }
 
   /** Updates the boss enemy's position and behavior. */
@@ -67,6 +66,11 @@ public class BossEnemy extends Enemy {
     // Reverse direction if the boss reaches the edges of the screen
     if (x - WIDTH / 2 <= 0 || x + WIDTH / 2 >= SpaceShooter.WIDTH) {
       horizontalSpeed = -horizontalSpeed;
+    }
+
+    // Thả bom ngẫu nhiên
+    if (newObjects != null && Math.random() < 0.03) { // 2% xác suất mỗi frame
+      newObjects.add(new Bomb(x, y + HEIGHT / 2));
     }
   }
   /**
@@ -108,9 +112,7 @@ public class BossEnemy extends Enemy {
   }
 
   /** Checks if the boss enemy is dead. */
-  public boolean isDead() {
-    return health <= 0;
-  }
+  public boolean isDead() { return health <= 0; }
 
   /**
    * Renders the boss enemy on the screen.
@@ -136,4 +138,12 @@ public class BossEnemy extends Enemy {
     }
   }
 
+  /**
+   * Sets the list of new game objects to be added by the boss enemy.
+   *
+   * @param newObjects List of new game objects.
+   */
+  public void setNewObjects(List<GameObject> newObjects) {
+    this.newObjects = newObjects;
+  }
 }

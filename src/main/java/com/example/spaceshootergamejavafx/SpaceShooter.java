@@ -36,10 +36,10 @@ import javafx.util.Duration;
 public class SpaceShooter extends Application {
 
   /** Width of the game window. */
-  public static final int WIDTH = 500;
+  public static final int WIDTH = 300;
 
   /** Height of the game window. */
-  public static final int HEIGHT = 900;
+  public static final int HEIGHT = 600;
 
   /** Number of lives the player starts with. */
   public static int numLives = 3;
@@ -255,7 +255,7 @@ public class SpaceShooter extends Application {
     List<Bullet> bullets = new ArrayList<>();
     List<Enemy> enemies = new ArrayList<>();
     List<PowerUp> powerUps = new ArrayList<>();
-
+    List<Bomb> bombs = new ArrayList<>();
     for (GameObject obj : gameObjects) {
       if (obj instanceof Bullet) {
         bullets.add((Bullet)obj);
@@ -263,6 +263,8 @@ public class SpaceShooter extends Application {
         enemies.add((Enemy)obj);
       } else if (obj instanceof PowerUp) {
         powerUps.add((PowerUp)obj);
+      } else if (obj instanceof Bomb) {
+        bombs.add((Bomb)obj);
       }
     }
 
@@ -287,7 +289,8 @@ public class SpaceShooter extends Application {
             score += 10;
           }
           scoreLabel.setText("Score: " + score);
-          BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated + "/" + MAX_BOSES);
+          BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated + "/" +
+                                  MAX_BOSES);
 
           if (score % 100 == 0) {
             Enemy.SPEED += 0.8;
@@ -317,6 +320,19 @@ public class SpaceShooter extends Application {
       levelUpShown = true;
     } else if (score % 100 != 0) {
       levelUpShown = false;
+    }
+
+    for (Bomb bomb : bombs) {
+      if (bomb.getBounds().intersects(player.getBounds())) {
+        bomb.setDead(true);
+        numLives--;
+        lifeLabel.setText("Lives: " + numLives);
+        if (numLives < 0) {
+          gameRunning = false;
+          showLosingScreen();
+          return;
+        }
+      }
     }
   }
 
@@ -382,7 +398,8 @@ public class SpaceShooter extends Application {
     Enemy.SPEED = 1.0;
     lifeLabel.setText("Lives: " + numLives);
     scoreLabel.setText("Score: " + score);
-    BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated + "/" + MAX_BOSES);
+    BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated + "/" +
+                            MAX_BOSES);
     gameObjects.add(player);
     reset = true;
     gameRunning = true;
@@ -398,6 +415,7 @@ public class SpaceShooter extends Application {
 
     if (score % 200 == 0 && score > 0 && !bossExists) {
       BossEnemy boss = new BossEnemy(x, -50);
+      boss.setNewObjects(newObjects);
       gameObjects.add(boss);
       showTempMessage("A boss is ahead, watch out!", 200, HEIGHT / 2 - 200, 5);
       bossExists = true; // Ensure we don't spawn multiple bosses
@@ -428,29 +446,31 @@ public class SpaceShooter extends Application {
   private Button tryAgainButton = new Button("Try Again");
   private Button menuButton = new Button("Menu");
 
-
   /** Method to create the try again button. */
-  private Button  TryButton() {
+  private Button TryButton() {
     tryAgainButton.setStyle(
-            "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
-                    + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
-                    + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-    tryAgainButton.setOnMouseEntered(
-            event -> {
-              tryAgainButton.setStyle(
-                      "-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 18; "
-                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
-                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-              tryAgainButton.setEffect(new Glow(0.5));
-            });
-    tryAgainButton.setOnMouseExited(
-            event -> {
-              tryAgainButton.setStyle(
-                      "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
-                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
-                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-              tryAgainButton.setEffect(null);
-            });
+        "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
+        +
+        "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
+        + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+    tryAgainButton.setOnMouseEntered(event -> {
+      tryAgainButton.setStyle("-fx-background-color: white; -fx-text-fill: "
+                              + "black; -fx-font-size: 18; "
+                              + "-fx-font-weight: bold; -fx-padding: 10 20; "
+                              + "-fx-font-family: 'Verdana';"
+                              +
+                              "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+      tryAgainButton.setEffect(new Glow(0.5));
+    });
+    tryAgainButton.setOnMouseExited(event -> {
+      tryAgainButton.setStyle("-fx-background-color: #444; -fx-text-fill: "
+                              + "white; -fx-font-size: 18; "
+                              + "-fx-font-weight: bold; -fx-padding: 10 20; "
+                              + "-fx-font-family: 'Verdana';"
+                              +
+                              "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+      tryAgainButton.setEffect(null);
+    });
     tryAgainButton.setLayoutX(180);
     tryAgainButton.setLayoutY(350);
     tryAgainButton.setPrefWidth(150);
@@ -461,27 +481,29 @@ public class SpaceShooter extends Application {
   }
 
   /** Method to create button exit*/
-  private Button  ExitButton() {
+  private Button ExitButton() {
     exitButton.setStyle(
-            "-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-size: 18; "
-                    + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
-                    + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-    exitButton.setOnMouseEntered(
-            event -> {
-              exitButton.setStyle(
-                      "-fx-background-color: white; -fx-text-fill: red; -fx-font-size: 18; "
-                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
-                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-              exitButton.setEffect(new Glow(0.5));
-            });
-    exitButton.setOnMouseExited(
-            event -> {
-              exitButton.setStyle(
-                      "-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-size: 18; "
-                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
-                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-              exitButton.setEffect(null);
-            });
+        "-fx-background-color: #d9534f; -fx-text-fill: white; -fx-font-size: "
+        + "18; "
+        +
+        "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana';"
+        + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+    exitButton.setOnMouseEntered(event -> {
+      exitButton.setStyle(
+          "-fx-background-color: white; -fx-text-fill: red; -fx-font-size: 18; "
+          + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: "
+          + "'Verdana';"
+          + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+      exitButton.setEffect(new Glow(0.5));
+    });
+    exitButton.setOnMouseExited(event -> {
+      exitButton.setStyle("-fx-background-color: #d9534f; -fx-text-fill: "
+                          + "white; -fx-font-size: 18; "
+                          + "-fx-font-weight: bold; -fx-padding: 10 20; "
+                          + "-fx-font-family: 'Verdana';"
+                          + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+      exitButton.setEffect(null);
+    });
     exitButton.setLayoutX(180);
     exitButton.setLayoutY(450);
     exitButton.setPrefWidth(150);
@@ -492,27 +514,28 @@ public class SpaceShooter extends Application {
   }
 
   /** Method to create menu button. */
-  private Button  MenuButton() {
+  private Button MenuButton() {
     menuButton.setStyle(
-            "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
-                    + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana'; "
-                    + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-    menuButton.setOnMouseEntered(
-            event -> {
-              menuButton.setStyle(
-                      "-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 18; "
-                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana'; "
-                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-              menuButton.setEffect(new Glow(0.5));
-            });
-    menuButton.setOnMouseExited(
-            event -> {
-              menuButton.setStyle(
-                      "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
-                              + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: 'Verdana'; "
-                              + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
-              menuButton.setEffect(null);
-            });
+        "-fx-background-color: #444; -fx-text-fill: white; -fx-font-size: 18; "
+        + "-fx-font-weight: bold; -fx-padding: 10 20; -fx-font-family: "
+        + "'Verdana'; "
+        + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+    menuButton.setOnMouseEntered(event -> {
+      menuButton.setStyle("-fx-background-color: white; -fx-text-fill: "
+                          + "black; -fx-font-size: 18; "
+                          + "-fx-font-weight: bold; -fx-padding: 10 20; "
+                          + "-fx-font-family: 'Verdana'; "
+                          + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+      menuButton.setEffect(new Glow(0.5));
+    });
+    menuButton.setOnMouseExited(event -> {
+      menuButton.setStyle("-fx-background-color: #444; -fx-text-fill: white; "
+                          + "-fx-font-size: 18; "
+                          + "-fx-font-weight: bold; -fx-padding: 10 20; "
+                          + "-fx-font-family: 'Verdana'; "
+                          + "-fx-pref-width: 150px; -fx-pref-height: 50px;");
+      menuButton.setEffect(null);
+    });
     menuButton.setLayoutX(180);
     menuButton.setLayoutY(550);
     menuButton.setPrefWidth(150);
@@ -523,7 +546,6 @@ public class SpaceShooter extends Application {
     });
     return menuButton;
   }
-
 
   /** Shows the losing screen when the player loses all lives. */
   private void showLosingScreen() {
@@ -555,7 +577,8 @@ public class SpaceShooter extends Application {
     // Create and set the losing screen scene
     Scene losingScene = new Scene(losingPane, WIDTH, HEIGHT);
     primaryStage.setScene(losingScene);
-    losingPane.getChildren().addAll(gameOverText, scoreText, ExitButton(), TryButton(), MenuButton());
+    losingPane.getChildren().addAll(gameOverText, scoreText, ExitButton(),
+                                    TryButton(), MenuButton());
 
     // Play the losing sound
     playLosingSound();
@@ -610,7 +633,8 @@ public class SpaceShooter extends Application {
     // Create and set the losing screen scene
     Scene winningsence = new Scene(winningPane, WIDTH, HEIGHT);
     primaryStage.setScene(winningsence);
-    winningPane.getChildren().addAll(wingameText, scoreText, ExitButton(), TryButton(), MenuButton());
+    winningPane.getChildren().addAll(wingameText, scoreText, ExitButton(),
+                                     TryButton(), MenuButton());
 
     playWinningSound();
   }
@@ -842,5 +866,4 @@ public class SpaceShooter extends Application {
     pause.setOnFinished(event -> root.getChildren().remove(tempMessage));
     pause.play();
   }
-
 }
