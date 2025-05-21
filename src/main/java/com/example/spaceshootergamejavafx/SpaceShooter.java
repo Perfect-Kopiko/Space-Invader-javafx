@@ -287,8 +287,7 @@ public class SpaceShooter extends Application {
             score += 10;
           }
           scoreLabel.setText("Score: " + score);
-          BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated + "/" +
-                                  MAX_BOSES);
+          BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated + "/" + MAX_BOSES);
 
           if (score % 100 == 0) {
             Enemy.SPEED += 0.8;
@@ -337,12 +336,14 @@ public class SpaceShooter extends Application {
     for (Enemy enemy : enemies) {
       if (enemy.getY() + enemy.getHeight() / 2 >= HEIGHT) {
         enemy.setDead(true);
-        enemy.SPEED = enemy.SPEED + 0.4;
+        enemy.SPEED = enemy.SPEED + 0.8;
         numLives--;
         score -= 10;
         lifeLabel.setText("Lives: " + numLives);
         if (numLives < 0) {
-          resetGame();
+          gameRunning = false;
+          showLosingScreen();
+          return;
         }
       }
     }
@@ -350,31 +351,44 @@ public class SpaceShooter extends Application {
 
   /** Restarts the game when the player chooses to try again. */
   private void restartGame() {
-    gameObjects.clear();
-    numLives = 3;
-    score = 0;
-    BossesDefeated = 0;
-    bossExists = false;
-    lifeLabel.setText("Lives: " + numLives);
-    scoreLabel.setText("Score: " + score);
-    BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated);
-    gameObjects.add(player);
-    reset = true;
-    gameRunning = true;
+    resetGameState();
     primaryStage.setScene(scene);
     menuMusicPlayer.play();
   }
 
   /** Starts the game when the player clicks the start button. */
   private void startGame() {
-    gameRunning = true;
+    resetGameState();
     primaryStage.setScene(scene);
   }
 
-  /** Resets the game when the player loses all lives or kill all bosses. */
-  private void resetGame() {
-    gameRunning = false;
-    showLosingScreen();
+  /** Starts the AI game when the player clicks the AI button. */
+  private void startAIGame() {
+    resetGameState();
+    aiController = new AIController(player, gameObjects, newObjects);
+    aiMode = true;
+    primaryStage.setScene(scene);
+  }
+
+  /** Reset game state when player enters the button menu. */
+  private void resetGameState() {
+    gameObjects.clear();
+    numLives = 3;
+    score = 0;
+    BossesDefeated = 0;
+    bossExists = false;
+    aiMode = false;
+    aiController = null;
+    Enemy.SPEED = 1.0;
+    lifeLabel.setText("Lives: " + numLives);
+    scoreLabel.setText("Score: " + score);
+    BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated + "/" + MAX_BOSES);
+    gameObjects.add(player);
+    reset = true;
+    gameRunning = true;
+    if (menuMusicPlayer != null) {
+      menuMusicPlayer.play();
+    }
   }
 
   /** Spawns an enemy at a random x-coordinate at the top of the screen. */
@@ -504,13 +518,6 @@ public class SpaceShooter extends Application {
     menuButton.setPrefWidth(150);
     menuButton.setPrefHeight(50);
     menuButton.setOnAction(even -> {
-      gameObjects.clear();
-      numLives = 3;
-      score = 0;
-      BossesDefeated = 0;
-      bossExists = false;
-      gameObjects.add(player);
-      reset = true;
       Scene menuScene = new Scene(createMenu(), WIDTH, HEIGHT);
       primaryStage.setScene(menuScene);
     });
@@ -554,9 +561,7 @@ public class SpaceShooter extends Application {
     playLosingSound();
   }
 
-  /**
-   * phuong thuc tao am thanh losing game.
-   */
+  /** Method to play the losing sound. */
   private void playLosingSound() {
     try {
       // Load the MP3 file as a Media object
@@ -635,8 +640,9 @@ public class SpaceShooter extends Application {
    */
   private void initEventHandlers(Scene scene) {
     scene.setOnKeyPressed(event -> {
+      // Check if AI mode is enabled
       if (aiMode)
-        return; // Không cho điều khiển khi AI mode
+        return;
       switch (event.getCode()) {
       case A:
       case LEFT:
@@ -837,9 +843,4 @@ public class SpaceShooter extends Application {
     pause.play();
   }
 
-  private void startAIGame() {
-    aiController = new AIController(player, gameObjects, newObjects);
-    gameRunning = true;
-    primaryStage.setScene(scene);
-  }
 }

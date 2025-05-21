@@ -21,10 +21,10 @@ public class AIController {
     private final Random random = new Random();
 
     /** Cooldown timer for shooting */
-    private long lastShotTime = 0;
+    private long lastShotTime = 1;
 
     /** Minimum time between shots in milliseconds */
-    private static final long SHOT_COOLDOWN = 500;
+    private static final long SHOT_COOLDOWN = 200;
 
     /** Chance of shooting when an enemy is detected (0-100) */
     private static final int SHOOT_CHANCE = 70;
@@ -159,25 +159,25 @@ public class AIController {
      */
     private void avoidEdges() {
         // Avoid left edge
-        if (player.getX() < 50) {
+        if (player.getX() < 30) {
             player.setMoveLeft(false);
             player.setMoveRight(true);
         }
 
         // Avoid right edge
-        if (player.getX() > SpaceShooter.WIDTH - 50) {
+        if (player.getX() > SpaceShooter.WIDTH - 30) {
             player.setMoveRight(false);
             player.setMoveLeft(true);
         }
 
         // Avoid top edge
-        if (player.getY() < 50) {
+        if (player.getY() < 200) {
             player.setMoveForward(false);
             player.setMoveBackward(true);
         }
 
         // Avoid bottom edge
-        if (player.getY() > SpaceShooter.HEIGHT - 50) {
+        if (player.getY() > SpaceShooter.HEIGHT - 30) {
             player.setMoveBackward(false);
             player.setMoveForward(true);
         }

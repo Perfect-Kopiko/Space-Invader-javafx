@@ -16,7 +16,7 @@ public class Enemy extends GameObject {
   protected static final int HEIGHT = 80;
 
   /** Speed of the enemy. */
-  public static double SPEED = 1;
+  public static double SPEED = 1.0;
 
   /** Image for the enemy. */
   private final Image enemyImage;
