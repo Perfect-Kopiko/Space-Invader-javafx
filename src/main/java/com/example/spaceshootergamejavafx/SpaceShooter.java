@@ -410,13 +410,30 @@ public class SpaceShooter extends Application {
     scoreLabel.setText("Score: " + score);
     BossDefeatLable.setText("Bosses Defeated: " + BossesDefeated + "/" +
                             MAX_BOSES);
-    gameObjects.add(player);
     reset = true;
     gameRunning = true;
     if (menuMusicPlayer != null) {
       menuMusicPlayer.play();
     }
+
+    // Reset trạng thái player về mặc định
+    player =
+        new Player(WIDTH / 2, HEIGHT - 40); // Đặt lại vị trí giữa đáy màn hình
+    player.setMoveLeft(false);
+    player.setMoveRight(false);
+    player.setMoveForward(false);
+    player.setMoveBackward(false);
     player.setBulletLevel(1); // reset về 1 khi bắt đầu game
+
+    gameObjects.add(player);
+
+    // Nếu đang ở AI mode, tạo lại AIController với player mới
+    if (aiMode) {
+      aiController = new AIController(player, gameObjects, newObjects);
+    }
+
+    // Gán lại event handler cho player mới
+    initEventHandlers(scene);
   }
 
   /** Spawns an enemy at a random x-coordinate at the top of the screen. */

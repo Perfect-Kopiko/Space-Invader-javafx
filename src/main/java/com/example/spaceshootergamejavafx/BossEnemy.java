@@ -15,10 +15,10 @@ public class BossEnemy extends Enemy {
   private int health = 5;
 
   /** Width of the boss enemy hitbox. */
-  private static final int WIDTH = 90;
+  private static final int WIDTH = 60;
 
   /** Height of the boss enemy hitbox. */
-  private static final int HEIGHT = 50; // Hitbox height
+  private static final int HEIGHT = 30; // Hitbox height
 
   /** Number of hits the boss can take before dying. */
   private int numHits = 5;
@@ -45,7 +45,7 @@ public class BossEnemy extends Enemy {
   public BossEnemy(double x, double y) {
     super(x, y);
     SPEED = 1.0; // Vertical speed
-    health = 10;
+    health = 15;
 
     // Load the boss image from resources
     this.bossImage = new Image(
@@ -55,9 +55,14 @@ public class BossEnemy extends Enemy {
   /** Updates the boss enemy's position and behavior. */
   @Override
   public void update() {
-    // BossEnemy moves vertically down
-    if (y < 40) {
-      y += SPEED;
+    // BossEnemy moves vertically down đến giữa màn hình rồi quay đầu lên
+    y += SPEED;
+
+    // Nếu boss chạm biên trên hoặc vượt quá nửa trên màn hình thì đổi hướng
+    if (y < HEIGHT / 4) {
+      SPEED = Math.abs(SPEED); // đi xuống
+    } else if (y > SpaceShooter.HEIGHT / 2) {
+      SPEED = -Math.abs(SPEED); // đi lên
     }
 
     // BossEnemy also moves horizontally back and forth
@@ -69,7 +74,7 @@ public class BossEnemy extends Enemy {
     }
 
     // Thả bom ngẫu nhiên
-    if (newObjects != null && Math.random() < 0.03) { // 2% xác suất mỗi frame
+    if (newObjects != null && Math.random() < 0.03) {
       newObjects.add(new Bomb(x, y + HEIGHT / 2));
     }
   }

@@ -1,19 +1,19 @@
 package com.example.spaceshootergamejavafx;
 
+import java.util.Objects;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.util.Objects;
 
 /** Represents an enemy object in the game. */
 public class Enemy extends GameObject {
 
   /** Width of the enemy hitbox. */
-  protected static final int WIDTH = 80;
+  protected static final int WIDTH = 50;
 
   /** Height of the enemy hitbox. */
-  protected static final int HEIGHT = 80;
+  protected static final int HEIGHT = 30;
 
   /** Speed of the enemy. */
   public static double SPEED = 1.0;
@@ -33,8 +33,8 @@ public class Enemy extends GameObject {
   public Enemy(double x, double y) {
     super(x, y, WIDTH, HEIGHT);
     // Load the enemy image from resources
-    this.enemyImage =
-        new Image(Objects.requireNonNull(getClass().getResourceAsStream("/enemy.png")));
+    this.enemyImage = new Image(
+        Objects.requireNonNull(getClass().getResourceAsStream("/enemy.png")));
   }
 
   /** Updates the enemy's position. */
@@ -85,10 +85,7 @@ public class Enemy extends GameObject {
    *
    * @param dead The dead flag to set.
    */
-  public void setDead(boolean dead) {
-    this.dead = dead;
-  }
-
+  public void setDead(boolean dead) { this.dead = dead; }
 
   /**
    * Returns whether the enemy is dead.
