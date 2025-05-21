@@ -1,13 +1,13 @@
 package com.example.spaceshootergamejavafx;
 
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 
 /** Represents the player object in the game */
 public class Player extends GameObject {
@@ -42,6 +42,8 @@ public class Player extends GameObject {
   /** Stores the dead flag for the player */
   private boolean dead = false;
 
+  private int bulletLevel = 1; // Số tia đạn, mặc định là 1
+
   /**
    * Creates a new player at the specified position
    *
@@ -51,10 +53,9 @@ public class Player extends GameObject {
   public Player(double x, double y) {
     super(x, y, WIDTH, HEIGHT);
     // Load the overlay image from resources
-    this.overlayImage =
-        new Image(Objects.requireNonNull(getClass().getResourceAsStream("/player.png")));
+    this.overlayImage = new Image(
+        Objects.requireNonNull(getClass().getResourceAsStream("/player.png")));
   }
-
 
   /**
    * Returns the width of the player hitbox
@@ -81,18 +82,20 @@ public class Player extends GameObject {
    *
    * @return The health of the player
    */
-  public int getHealth() {
-    return health;
-  }
+  public int getHealth() { return health; }
 
   /**
    * Sets the health of the player
    *
    * @param health The health of the player
    */
-  public void setHealth(int health) {
-    this.health = health;
+  public void setHealth(int health) { this.health = health; }
+
+  public void setBulletLevel(int level) {
+    bulletLevel = Math.max(1, Math.min(3, level)); // Giới hạn từ 1 đến 3
   }
+
+  public int getBulletLevel() { return bulletLevel; }
 
   /** Updates the player's position */
   @Override
@@ -134,7 +137,7 @@ public class Player extends GameObject {
       double aspectRatio = imageWidth / imageHeight;
 
       // Double the size of the visual image dimensions
-      double scaledWidth = WIDTH * 2; // Double the width
+      double scaledWidth = WIDTH * 2;   // Double the width
       double scaledHeight = HEIGHT * 2; // Double the height
 
       // Maintain aspect ratio
@@ -161,18 +164,14 @@ public class Player extends GameObject {
    *
    * @param moveLeft The move left flag to set
    */
-  public void setMoveLeft(boolean moveLeft) {
-    this.moveLeft = moveLeft;
-  }
+  public void setMoveLeft(boolean moveLeft) { this.moveLeft = moveLeft; }
 
   /**
    * Sets the move right flag
    *
    * @param moveRight The move right flag to set
    */
-  public void setMoveRight(boolean moveRight) {
-    this.moveRight = moveRight;
-  }
+  public void setMoveRight(boolean moveRight) { this.moveRight = moveRight; }
 
   /**
    * Sets the move forward flag
@@ -198,8 +197,19 @@ public class Player extends GameObject {
    * @param newObjects The list of new objects to add the bullet to
    */
   public void shoot(List<GameObject> newObjects) {
-    Bullet bullet = new Bullet(x, y - HEIGHT / 2 - Bullet.HEIGHT);
-    newObjects.add(bullet);
+    if (bulletLevel == 1) {
+      // Bắn 1 tia thẳng
+      newObjects.add(new Bullet(x, y - HEIGHT / 2 - Bullet.HEIGHT));
+    } else if (bulletLevel == 2) {
+      // Bắn 2 tia chéo
+      newObjects.add(new Bullet(x - 10, y - HEIGHT / 2 - Bullet.HEIGHT));
+      newObjects.add(new Bullet(x + 10, y - HEIGHT / 2 - Bullet.HEIGHT));
+    } else if (bulletLevel >= 3) {
+      // Bắn 3 tia: trái, giữa, phải
+      newObjects.add(new Bullet(x, y - HEIGHT / 2 - Bullet.HEIGHT));
+      newObjects.add(new Bullet(x - 15, y - HEIGHT / 2 - Bullet.HEIGHT));
+      newObjects.add(new Bullet(x + 15, y - HEIGHT / 2 - Bullet.HEIGHT));
+    }
   }
 
   /**
@@ -207,9 +217,7 @@ public class Player extends GameObject {
    *
    * @param dead The dead flag to set
    */
-  public void setDead(boolean dead) {
-    this.dead = dead;
-  }
+  public void setDead(boolean dead) { this.dead = dead; }
 
   /**
    * Returns whether the player is dead

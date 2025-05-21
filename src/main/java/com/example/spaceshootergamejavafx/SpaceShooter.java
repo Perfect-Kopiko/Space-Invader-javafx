@@ -305,6 +305,8 @@ public class SpaceShooter extends Application {
           powerUp.setDead(true);
           score += 50;
           scoreLabel.setText("Score: " + score);
+          player.setBulletLevel(player.getBulletLevel() +
+                                1); // <-- Thêm dòng này
         }
       }
     }
@@ -332,6 +334,14 @@ public class SpaceShooter extends Application {
           showLosingScreen();
           return;
         }
+      }
+    }
+
+    // Check collisions between power-ups and the player
+    for (PowerUp powerUp : powerUps) {
+      if (powerUp.getBounds().intersects(player.getBounds())) {
+        powerUp.setDead(true);
+        player.setBulletLevel(player.getBulletLevel() + 1);
       }
     }
   }
@@ -406,6 +416,7 @@ public class SpaceShooter extends Application {
     if (menuMusicPlayer != null) {
       menuMusicPlayer.play();
     }
+    player.setBulletLevel(1); // reset về 1 khi bắt đầu game
   }
 
   /** Spawns an enemy at a random x-coordinate at the top of the screen. */

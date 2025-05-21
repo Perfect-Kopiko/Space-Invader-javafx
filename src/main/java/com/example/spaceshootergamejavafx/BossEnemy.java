@@ -45,7 +45,7 @@ public class BossEnemy extends Enemy {
   public BossEnemy(double x, double y) {
     super(x, y);
     SPEED = 1.0; // Vertical speed
-    health = 5;
+    health = 10;
 
     // Load the boss image from resources
     this.bossImage = new Image(
