@@ -14,10 +14,7 @@
 - [Setup and Installation](#setup-and-installation)
 - [Necessary Configuration](#necessary-configuration)
 - [How to Play](#how-to-play)
-- [Contributing](#contributing)
-- [License](#license)
-- [Author](#author)
-
+- 
 ## Overview
 
 Space Shooter is a simple, lightweight but engaging JavaFX-based game where players navigate a spaceship, avoiding enemies and obstacles while trying to achieve the highest score possible. The game incorporates features such as enemy spawn logic, collision detection, power-ups, and a scoring system, showcasing the capabilities of JavaFX in creating interactive 2D games.
@@ -115,18 +112,6 @@ Ensure JavaFX is correctly set up in your development environment:
 - Collect power-ups to enhance your capabilities and increase your score.
 - The game ends when all lives are lost, but you can start over by resetting the game.
 
-## Contributing
 
-Contributions to the Space Shooter game are welcome! Please fork the repository, make your changes, and submit a pull request with your improvements.
 
-## License
 
-This project is licensed under the Creative Commons License. See the [LICENSE](LICENSE) file for more information.
-
-## Author
-
-- [Son Nguyen](https://github.com/hoangsonww)
-
----
-
-Created with ❤️ by [Son Nguyen](https://github.com/hoangsonww) in 2024.
